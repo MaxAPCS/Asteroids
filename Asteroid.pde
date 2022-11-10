@@ -1,3 +1,3 @@
-class Asteroid extends SpaceObject [
+//class Asteroid extends SpaceObject [
   
-}
+//}
