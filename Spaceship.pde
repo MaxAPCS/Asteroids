@@ -13,7 +13,7 @@ class Spaceship extends SpaceObject {
       float dt = lastTime > 0 ? (cTime-lastTime)/1000f : 0;
       this.lastTime = cTime;
       
-      super.fixPos();
+      if (super.fixPos()) {this.acceleration = 0; super.vel = (float)Math.pow(super.vel, 0.9);}
       if (keyPressed) this.onKey(key, dt);
       
       super.vel += this.acceleration * dt;
@@ -32,6 +32,14 @@ class Spaceship extends SpaceObject {
       popMatrix();
     }
     
+    protected float getRadius() {return 3;}
+    
+    public void collide(float[] momentum) { // placeholder for death
+      super.angVel = 69;
+      super.vel = 0;
+      this.acceleration = 0;
+    }
+    
     private void fire() {
       bullets.add(new Bullet(this.getLoc(), this.getDir(), this.getVel()+600));
     }
@@ -39,16 +47,16 @@ class Spaceship extends SpaceObject {
     private void onKey(char c, float dt) {
       switch (c) {
         case 'w':
-          this.acceleration+=dt*2;
+          this.acceleration+=dt*64;
           break;
         case 's':
-          this.acceleration-=dt;
+          this.acceleration-=dt*52;
           break;
         case 'a':
-          super.angularMomentumThatIDontUnderstandYet -= dt/4f;
+          super.angVel -= dt*2;
           break;
         case 'd':
-          super.angularMomentumThatIDontUnderstandYet += dt/4f;
+          super.angVel += dt*2;
           break;
       }
     }
