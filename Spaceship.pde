@@ -32,7 +32,7 @@ class Spaceship extends SpaceObject {
       popMatrix();
     }
     
-    protected float getRadius() {return 3;}
+    protected float getRadius() {return 4;}
     
     public void collide(float[] momentum) { // placeholder for death
       super.angVel = 69;
@@ -51,6 +51,7 @@ class Spaceship extends SpaceObject {
           break;
         case 's':
           this.acceleration-=dt*52;
+          super.angVel += super.angVel > 0 ? -dt : dt;
           break;
         case 'a':
           super.angVel -= dt*2;

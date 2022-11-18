@@ -4,7 +4,7 @@ public class Bullet extends SpaceObject {
 
   public Bullet(float[] loc, double dir, float vel) {
     super(loc, dir, vel, 1);
-    this.deathTime = millis()+2*1000;
+    this.deathTime = millis()+2000;
   }
   
   private void update() {
@@ -18,15 +18,10 @@ public class Bullet extends SpaceObject {
   
   public void draw() {
     this.update();
-
-    pushMatrix();
-    translate(super.loc[0], super.loc[1]);
-    rotate((float)super.dir);
-    rect(-2, -2, 2, 2);
-    popMatrix();
+    ellipse(this.getLoc()[0], this.getLoc()[1], 2.5, 2.5);
   }
   
-  protected float getRadius() {return (float)(2*Math.sqrt(2));}
+  protected float getRadius() {return this.deathTime-millis() < 1900 ? 2.5 : -100;}
   
   public void collide(float[] momentum) {
     bullets.remove(this);
