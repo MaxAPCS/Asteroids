@@ -59,6 +59,12 @@ class Spaceship extends SpaceObject {
         case 'd':
           super.angVel += dt*2;
           break;
+        case 'v':
+          super.loc = new float[]{(float)Math.random()*displayWidth, (float)Math.random()*displayHeight};
+          this.angVel = 0;
+          super.vel = 0;
+          this.acceleration = 0;
+          break;
       }
     }
     

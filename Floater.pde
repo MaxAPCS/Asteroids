@@ -3,7 +3,7 @@ abstract class SpaceObject {
   private float vel;
   private double dir;
   protected double angVel;
-  private int mass;
+  private float mass;
 
   protected SpaceObject(float[] loc) {
     this.loc = loc;
@@ -12,7 +12,7 @@ abstract class SpaceObject {
     this.angVel = 0;
     this.mass = 5;
   }
-  protected SpaceObject(float[] loc, double dir, float vel, int mass) {
+  protected SpaceObject(float[] loc, double dir, float vel, float mass) {
     this.loc = loc;
     this.dir = dir;
     this.vel = vel;
@@ -50,7 +50,7 @@ abstract class SpaceObject {
   protected float[] getLoc() {return this.loc.clone();}
   protected float getVel() {return this.vel;}
   protected double getDir() {return this.dir;}
-  protected int getMass() {return this.mass;}
+  protected float getMass() {return this.mass;}
   public float[] getMomentum() {return new float[]{(float)Math.cos(this.dir) * this.mass * this.vel, (float)Math.sin(this.dir) * this.mass * this.vel};};
   protected abstract float getRadius(); // for collisions
 }

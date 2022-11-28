@@ -9,7 +9,7 @@ class Asteroid extends SpaceObject {
   }
   
   private Asteroid(float[] loc, double[] components, int mass) {
-    super(loc, Math.atan(components[1]/components[0]) * (components[0]<0 && components[1]<0 ? -1 : 1), (float)Math.sqrt(components[0]*components[0]+components[1]*components[1]), mass);
+    super(loc, Math.atan(components[1]/components[0]), (float)Math.sqrt(components[0]*components[0]+components[1]*components[1]), mass);
     this.angVel = 0; // yeah not touching that
     this.birth = millis();
   }
@@ -29,7 +29,7 @@ class Asteroid extends SpaceObject {
     translate(super.loc[0], super.loc[1]);
     rotate((float)super.dir);
     float angle = TWO_PI / this.getMass();
-    int radius = this.getMass()*3;
+    int radius = Math.round(this.getMass()*3);
     beginShape();
     for (float a = 0; a < TWO_PI; a += angle) vertex((float)(Math.cos(a) * radius), (float)(Math.sin(a) * radius));
     endShape(CLOSE);
@@ -38,14 +38,15 @@ class Asteroid extends SpaceObject {
   
   protected float getRadius() {return millis()-this.birth > 1000 ? this.getMass()*3 : -1000;}
   
+  private static final int mult = 12;
   public void collide(float[] momentum) {
     asteroids.remove(this);
     if (this.getMass() < 3) return;
-    momentum[0] += Math.cos(super.dir) * super.vel * this.getMass();
-    momentum[1] += Math.sin(super.dir) * super.vel * this.getMass();
-    double[] ratio = new double[]{Math.random()*2-1, Math.random()*2-1};
-    int[] masses = new int[]{this.getMass()/2, (int)Math.ceil(this.getMass()/2f)};
-    asteroids.add(new Asteroid(super.loc, new double[]{(momentum[0] * ratio[0])/masses[0], (momentum[1] * ratio[1])/masses[0]}, masses[0]));
-    asteroids.add(new Asteroid(super.loc, new double[]{(momentum[0] * (1 - ratio[0]))/masses[1], (momentum[1] * (1 - ratio[1]))/masses[1]}, masses[1]));
+    momentum[0] += Math.cos(this.getDir()) * super.vel * this.getMass();
+    momentum[1] += Math.sin(this.getDir()) * super.vel * this.getMass();
+    double ratio = Math.random()*mult-(mult/2f);
+    int[] masses = {(int)Math.floor(this.getMass()/2f), (int)Math.ceil(this.getMass()/2f)};
+    asteroids.add(new Asteroid(super.loc, new double[]{(momentum[0] * ratio)/masses[0], (momentum[1] * ratio)/masses[0]}, masses[0]));
+    asteroids.add(new Asteroid(super.loc, new double[]{(momentum[0] * (-ratio))/masses[1], (momentum[1] * (-ratio))/masses[1]}, masses[1]));
   }
 }

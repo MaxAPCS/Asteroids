@@ -3,7 +3,7 @@ public class Bullet extends SpaceObject {
   private long deathTime;
 
   public Bullet(float[] loc, double dir, float vel) {
-    super(loc, dir, vel, 1);
+    super(loc, dir, vel, 0.03f);
     this.deathTime = millis()+2000;
   }
   
