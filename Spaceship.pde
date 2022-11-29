@@ -1,11 +1,13 @@
 public final Spaceship spaceship = new Spaceship();
 class Spaceship extends SpaceObject {
     private float acceleration;
+    private long invincibility = 0;
     private long lastTime = -1;
 
     private Spaceship() {
       super(new float[]{1000, 500});
       this.acceleration = 0;
+      this.invincibility = millis() + 1000;
     }
     
     protected void update() {
@@ -22,6 +24,8 @@ class Spaceship extends SpaceObject {
     
     public void draw() {
       this.update();
+      long ti = this.invincibility-millis();
+      if (ti > 0 && ti/75f % 2 < 1) return;
       pushMatrix();
       translate(super.loc[0], super.loc[1]);
       rotate((float)super.dir-HALF_PI);
@@ -32,7 +36,7 @@ class Spaceship extends SpaceObject {
       popMatrix();
     }
     
-    protected float getRadius() {return 4;}
+    protected float getRadius() {return this.invincibility-millis()>0?0:4;}
     
     public void collide(float[] momentum) { // placeholder for death
       super.angVel = 69;
@@ -42,6 +46,14 @@ class Spaceship extends SpaceObject {
     
     private void fire() {
       bullets.add(new Bullet(this.getLoc(), this.getDir(), this.getVel()+600));
+    }
+    
+    public void hyperspeed() {
+        super.loc = new float[]{(float)Math.random()*displayWidth, (float)Math.random()*displayHeight};
+        super.vel = 0;
+        this.angVel = 0;
+        this.acceleration = 0;
+        this.invincibility = millis() + 1000;
     }
     
     private void onKey(char c, float dt) {
@@ -58,12 +70,6 @@ class Spaceship extends SpaceObject {
           break;
         case 'd':
           super.angVel += dt*2;
-          break;
-        case 'v':
-          super.loc = new float[]{(float)Math.random()*displayWidth, (float)Math.random()*displayHeight};
-          this.angVel = 0;
-          super.vel = 0;
-          this.acceleration = 0;
           break;
       }
     }

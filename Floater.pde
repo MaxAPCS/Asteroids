@@ -1,4 +1,5 @@
-abstract class SpaceObject {   
+abstract class SpaceObject {
+  private static final long c = 10000; // lightspeed
   private float[] loc;
   private float vel;
   private double dir;
@@ -21,7 +22,7 @@ abstract class SpaceObject {
   }
 
   protected void update(float dt) {
-    this.vel = Math.max(0, this.vel);
+    this.vel = Math.min(Math.max(0, this.vel), c);
     double mult = this.vel * dt;
     this.dir += this.angVel * dt;
     this.loc[0] += Math.cos(dir) * mult;
