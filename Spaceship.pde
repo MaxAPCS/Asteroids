@@ -5,7 +5,7 @@ class Spaceship extends SpaceObject {
     private long lastTime = -1;
 
     private Spaceship() {
-      super(new float[]{1000, 500});
+      super(new float[]{width/2f, height/2f});
       this.acceleration = 0;
       this.invincibility = millis() + 1000;
     }
