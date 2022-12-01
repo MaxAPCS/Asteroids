@@ -31,10 +31,10 @@ abstract class SpaceObject {
   
   protected boolean fixPos() {
     boolean dirty = false;
-    if (this.loc[0] > displayWidth) {this.loc[0] = 0; dirty = true;}
-    else if (this.loc[0] < 0) {this.loc[0] = displayWidth; dirty = true;}
-    if (this.loc[1] > displayHeight) {this.loc[1] = 0; dirty = true;}
-    else if (this.loc[1] < 0) {this.loc[1] = displayHeight; dirty = true;}
+    if (this.loc[0] > width) {this.loc[0] = 0; dirty = true;}
+    else if (this.loc[0] < 0) {this.loc[0] = width; dirty = true;}
+    if (this.loc[1] > height) {this.loc[1] = 0; dirty = true;}
+    else if (this.loc[1] < 0) {this.loc[1] = height; dirty = true;}
     return dirty;
   }
   
