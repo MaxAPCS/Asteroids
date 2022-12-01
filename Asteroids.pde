@@ -5,7 +5,7 @@ import java.util.List;
 public static Map<Asteroid, Integer> asteroids = new HashMap<Asteroid, Integer>();
 public static Map<Bullet, Integer> bullets = new HashMap<Bullet, Integer>();
 public void setup() {
-  size(windowWidth, windowHeight);
+  size(1000, 600);
   strokeWeight(4);
   strokeCap(ROUND);
   stroke(0xffffffff);
