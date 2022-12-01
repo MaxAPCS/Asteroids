@@ -3,7 +3,7 @@ class Asteroid extends SpaceObject {
   private long birth;
   
   public Asteroid() {
-    super(new float[]{(float)Math.random()*displayWidth, (float)Math.random()*displayHeight}, Math.random()*TWO_PI, (float)Math.random()*3+2, (int)Math.round(Math.random()*5+5));
+    super(new float[]{(float)Math.random()*width, (float)Math.random()*height}, Math.random()*TWO_PI, (float)Math.random()*3+2, (int)Math.round(Math.random()*5+5));
     this.angVel = Math.random()*0.2-0.1;
     this.birth = millis();
   }
