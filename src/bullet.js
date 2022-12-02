@@ -1,4 +1,5 @@
 import { SpaceObject } from "./spaceobject.js"
+import { dqueue } from "../index.js"
 export class Bullet extends SpaceObject {
   constructor(loc, dir, vel) {
     super(loc, dir, vel, 0.5);
@@ -11,7 +12,7 @@ export class Bullet extends SpaceObject {
     float dt = lastTime > 0 ? (cTime-lastTime)/1000 : 0;
     this.lastTime = cTime;
     super.fixPos();
-    if (millis() >= this.deathTime) bullets.remove(this);
+    if (millis() >= this.deathTime) dqueue.add(this);
     super.update(dt);
   }
   
@@ -23,6 +24,6 @@ export class Bullet extends SpaceObject {
   getRadius() {return this.deathTime-millis() < 1900 ? 2.5 : -100;}
   
   collide(momentum) {
-    bullets.remove(this);
+    dqueue.add(this);
   }
 }

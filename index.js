@@ -1,6 +1,7 @@
 import { Spaceship } from "./src/spaceship.js"
 
-const spaceship = new Spaceship();
+let spaceship;
+export const dqueue = new Set();
 const asteroids = new Set();
 const bullets = new Set();
 function setup() {
@@ -10,11 +11,19 @@ function setup() {
   stroke(0xffffffff);
   noFill();
   textAlign(LEFT, TOP);
+
+  spaceship = new Spaceship(width/2, height/2);
 }
 function draw() {
   background(0);
+  for (let d of dqueue) {
+    if (d instanceof Asteroid) {asteroids.remove(d); continue}
+    if (d instanceof Bullet) {bullets.remove(d); continue}
+  }
+  dqueue.clear();
+
   for (let a of asteroids) a.draw();
-  for (let b of new Set(bullets)) b.draw();
+  for (let b of bullets) b.draw();
   spaceship.draw();
   
   let collidables = [spaceship, ...bullets, ...asteroids];

@@ -1,7 +1,8 @@
 import { SpaceObject } from "./spaceobject.js"
+import { dqueue } from "../index.js"
 export class Spaceship extends SpaceObject {
-  constructor() {
-    super([width/2, height/2]);
+  constructor(x,y) {
+    super([x,y]);
     this.acceleration = 0;
     this.invincibility = millis() + 1000;
   }

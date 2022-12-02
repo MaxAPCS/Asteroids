@@ -1,4 +1,4 @@
-const c = 10000; // lightspeed
+const c = 5000; // lightspeed
 export class SpaceObject {
   constructor(loc, dir=0, vel=0, mass=5) {
     this.loc = loc;

@@ -1,4 +1,5 @@
 import { SpaceObject } from "./spaceobject.js"
+import { dqueue } from "../index.js"
 const mult = 16; // impulse
 export class Asteroid extends SpaceObject {
   constructor(loc = null, components = null, mass = null) {
@@ -38,7 +39,7 @@ export class Asteroid extends SpaceObject {
   getRadius() {return millis()-this.birth > 1000 ? this.getMass()*3 : -1000;}
   
   collide(momentum) {
-    asteroids.remove(this);
+    dqueue.add(this);
     if (this.getMass() < 3) return;
     momentum[0] += Math.cos(this.getDir()) * this.getVel() * this.getMass();
     momentum[1] += Math.sin(this.getDir()) * this.getVel() * this.getMass();
