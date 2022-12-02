@@ -1,3 +1,4 @@
+import { SpaceObject } from "./spaceobject.js"
 export class Bullet extends SpaceObject {
   constructor(loc, dir, vel) {
     super(loc, dir, vel, 0.5);

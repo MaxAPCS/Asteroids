@@ -1,3 +1,4 @@
+import { SpaceObject } from "./spaceobject.js"
 export class Spaceship extends SpaceObject {
   constructor() {
     super([width/2, height/2]);

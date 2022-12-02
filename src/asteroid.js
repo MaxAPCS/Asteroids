@@ -1,3 +1,4 @@
+import { SpaceObject } from "./spaceobject.js"
 const mult = 16; // impulse
 export class Asteroid extends SpaceObject {
   constructor(loc = null, components = null, mass = null) {
