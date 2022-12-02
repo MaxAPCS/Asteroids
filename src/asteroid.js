@@ -1,5 +1,5 @@
 const mult = 16; // impulse
-class Asteroid extends SpaceObject {
+export class Asteroid extends SpaceObject {
   constructor(loc = null, components = null, mass = null) {
     if (loc && components && mass) {
       super(loc, Math.atan(components[1]/components[0]) * (components[0]<0&&components[1]<0 ? -1 : 1), Math.sqrt(components[0]*components[0]+components[1]*components[1]), mass);

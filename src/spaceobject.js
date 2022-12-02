@@ -1,5 +1,5 @@
 const c = 10000; // lightspeed
-class SpaceObject {
+export class SpaceObject {
   constructor(loc, dir=0, vel=0, mass=5) {
     this.loc = loc;
     this.dir = 0;
@@ -34,7 +34,7 @@ class SpaceObject {
     a.collide(this.getMomentum());
     return true;
   }
-  collide(float[] momentum) {throw new Error("Collide method not implemented.")};
+  collide(momentum) {throw new Error("Collide method not implemented.")};
   
   getLoc() {return this.loc.clone();}
   getVel() {return this.vel;}

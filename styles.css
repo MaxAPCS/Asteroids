@@ -5,12 +5,4 @@ body {
     font-family: "Open Sans", sans-serif;
     text-align: center;
     margin: 0px;
-    height: 100px;
-}
-
-#content {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    height: 100vh;
 }
