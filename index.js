@@ -1,4 +1,4 @@
-import { Spaceship } from "src/spaceship.js"
+import { Spaceship } from "/src/spaceship.js"
 
 const spaceship = new Spaceship();
 const asteroids = new Set();
