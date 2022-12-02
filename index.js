@@ -5,7 +5,9 @@ export const dqueue = new Set();
 const asteroids = new Set();
 const bullets = new Set();
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  let div = document.getElementById('sketch-holder');
+  let canvas = createCanvas(windowWidth, windowHeight);
+  canvas.parent('sketch-holder');
   strokeWeight(4);
   strokeCap(ROUND);
   stroke(0xffffffff);
