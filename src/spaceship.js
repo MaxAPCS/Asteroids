@@ -1,6 +1,12 @@
 import { SpaceObject } from "./spaceobject.js"
 import { dqueue } from "../index.js"
 export class Spaceship extends SpaceObject {
+  static spaceship;
+  static getSpaceship() {
+    if (!Spaceship.spaceship) Spaceship.spaceship = new Spaceship(height/2, width/2);
+    return Spaceship.spaceship;
+  }
+
   constructor(x,y) {
     super([x,y]);
     this.acceleration = 0;

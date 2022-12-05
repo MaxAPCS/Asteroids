@@ -1,9 +1,9 @@
 import { Spaceship } from "./src/spaceship.js"
 
-let spaceship;
 export const dqueue = new Set();
 const asteroids = new Set();
 const bullets = new Set();
+let spaceship;
 function setup() {
   createCanvas(windowWidth, windowHeight);
   strokeWeight(4);
@@ -12,7 +12,7 @@ function setup() {
   noFill();
   textAlign(LEFT, TOP);
 
-  spaceship = new Spaceship(width/2, height/2);
+  spaceship = Spaceship.getSpaceship();
 }
 function draw() {
   background(0);
