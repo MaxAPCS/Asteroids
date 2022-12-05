@@ -19,7 +19,7 @@ export class Asteroid extends SpaceObject {
     let dt = lastTime > 0 ? (cTime-lastTime)/1000 : 0;
     this.lastTime = cTime;
     this.fixPos();
-    this.update(dt);
+    super.update(dt);
   }
   
   draw() {
@@ -31,7 +31,7 @@ export class Asteroid extends SpaceObject {
     let angle = TWO_PI / this.getMass();
     let radius = Math.round(this.getMass()*3);
     beginShape();
-    for (float a = 0; a < TWO_PI; a += angle) vertex(Math.cos(a) * radius, Math.sin(a) * radius);
+    for (let a = 0; a < TWO_PI; a += angle) vertex(Math.cos(a) * radius, Math.sin(a) * radius);
     endShape(CLOSE);
     popMatrix();
   }

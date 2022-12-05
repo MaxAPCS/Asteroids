@@ -9,14 +9,14 @@ export class Spaceship extends SpaceObject {
   
   update() {
     let cTime = millis();
-    let dt = lastTime > 0 ? (cTime-lastTime)/1000 : 0;
+    let dt = this.lastTime > 0 ? (cTime-this.lastTime)/1000 : 0;
     this.lastTime = cTime;
     
     if (this.fixPos()) {this.acceleration = 0; this.vel = Math.pow(this.vel, 0.9);}
     if (keyPressed) this.onKey(key, dt);
     
     this.vel += this.acceleration * dt;
-    this.update(dt);
+    super.update(dt);
   }
   
   draw() {
@@ -46,7 +46,7 @@ export class Spaceship extends SpaceObject {
   }
   
   hyperspace() {
-      super.loc = [Math.random()*displayWidth, Math.random()*displayHeight];
+      super.loc = [Math.random()*width, Math.random()*height];
       super.vel = 0;
       this.angVel = 0;
       this.acceleration = 0;

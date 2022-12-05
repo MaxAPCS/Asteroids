@@ -8,8 +8,8 @@ export class Bullet extends SpaceObject {
   }
   
   update() {
-    long cTime = millis();
-    float dt = lastTime > 0 ? (cTime-lastTime)/1000 : 0;
+    let cTime = millis();
+    let dt = this.lastTime > 0 ? (cTime-this.lastTime)/1000 : 0;
     this.lastTime = cTime;
     super.fixPos();
     if (millis() >= this.deathTime) dqueue.add(this);

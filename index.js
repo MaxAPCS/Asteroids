@@ -5,9 +5,7 @@ export const dqueue = new Set();
 const asteroids = new Set();
 const bullets = new Set();
 function setup() {
-  let div = document.getElementById('sketch-holder');
-  let canvas = createCanvas(windowWidth, windowHeight);
-  canvas.parent('sketch-holder');
+  createCanvas(windowWidth, windowHeight);
   strokeWeight(4);
   strokeCap(ROUND);
   stroke(0xffffffff);
@@ -19,8 +17,8 @@ function setup() {
 function draw() {
   background(0);
   for (let d of dqueue) {
-    if (d instanceof Asteroid) {asteroids.remove(d); continue}
-    if (d instanceof Bullet) {bullets.remove(d); continue}
+    if (d instanceof Asteroid) {asteroids.delete(d); continue}
+    if (d instanceof Bullet) {bullets.delete(d); continue}
   }
   dqueue.clear();
 
