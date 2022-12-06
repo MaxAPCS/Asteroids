@@ -4,13 +4,14 @@ const bullets = new Set();
 let spaceship;
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  angleMode(RADIANS);
   strokeWeight(4);
   strokeCap(ROUND);
   stroke(0xffffffff);
   noFill();
   textAlign(LEFT, TOP);
 
-  spaceship = Spaceship.getSpaceship();
+  spaceship = new Spaceship(width/2, height/2);
 }
 function draw() {
   background(0);
@@ -43,34 +44,34 @@ function keyPressed() {
       break;
   }
 }
-const c = 6900; // lightspeed
+const c = 8000; // lightspeed
 class SpaceObject {
   constructor(loc, dir=0, vel=0, mass=5) {
     this.loc = loc;
-    this.dir = 0;
-    this.vel = 0;
+    this.dir = dir;
+    this.vel = vel;
     this.angVel = 0;
-    this.mass = 5;
+    this.mass = mass;
   }
 
   update(dt) {
     this.vel = Math.min(Math.max(0, this.vel), c);
-    let mult = this.vel * dt;
     this.dir += this.angVel * dt;
-    this.loc[0] += Math.cos(dir) * mult;
-    this.loc[1] += Math.sin(dir) * mult;
+    let mul = this.vel * dt;
+    this.loc[0] += Math.cos(this.dir) * mul;
+    this.loc[1] += Math.sin(this.dir) * mul;
   }
   
   fixPos() {
     let dirty = false;
-    if (this.loc[0] > displayWidth) {this.loc[0] = 0; dirty = true;}
-    else if (this.loc[0] < 0) {this.loc[0] = displayWidth; dirty = true;}
-    if (this.loc[1] > displayHeight) {this.loc[1] = 0; dirty = true;}
-    else if (this.loc[1] < 0) {this.loc[1] = displayHeight; dirty = true;}
+    if (this.loc[0] > width) {this.loc[0] = 0; dirty = true;}
+    else if (this.loc[0] < 0) {this.loc[0] = width; dirty = true;}
+    if (this.loc[1] > height) {this.loc[1] = 0; dirty = true;}
+    else if (this.loc[1] < 0) {this.loc[1] = height; dirty = true;}
     return dirty;
   }
   
-  draw() {throw new Error("Draw method not implemented.")};
+  draw() {throw new Error("Draw method not implemented.")}
   
   getMomentum() {return [Math.cos(this.dir) * this.mass * this.vel, Math.sin(this.dir) * this.mass * this.vel]};
   checkCollision(a) {
@@ -79,22 +80,22 @@ class SpaceObject {
     a.collide(this.getMomentum());
     return true;
   }
-  collide(momentum) {throw new Error("Collide method not implemented.")};
+  collide(momentum) {throw new Error("Collide method not implemented.")}
   
-  getLoc() {return this.loc;}
+  getLoc() {return [...this.loc];}
   getVel() {return this.vel;}
   getDir() {return this.dir;}
   getMass() {return this.mass;}
-  getRadius() {throw new Error("Radius method not implemented.")}; // for collisions
+  getRadius() {throw new Error("Radius method not implemented.")} // for collisions
 }
-const mult = 16; // impulse
+const imp = 16; // impulse
 class Asteroid extends SpaceObject {
   constructor(loc = null, components = null, mass = null) {
     if (loc && components && mass) {
       super(loc, Math.atan(components[1]/components[0]) * (components[0]<0&&components[1]<0 ? -1 : 1), Math.sqrt(components[0]*components[0]+components[1]*components[1]), mass);
       this.angVel = 0; // yeah not touching that
     } else {
-      super([Math.random()*displayWidth, Math.random()*displayHeight], Math.random()*TWO_PI, Math.random()*3+2, Math.round(Math.random()*5+5));
+      super([Math.random()*width, Math.random()*height], Math.random()*Math.PI*2, Math.random()*3+2, Math.round(Math.random()*7+5));
       this.angVel = Math.random()*0.2-0.1;
     }
     this.birth = millis();
@@ -103,7 +104,7 @@ class Asteroid extends SpaceObject {
   
   update() {
     let cTime = millis();
-    let dt = lastTime > 0 ? (cTime-lastTime)/1000 : 0;
+    let dt = this.lastTime > 0 ? (cTime-this.lastTime)/1000 : 0;
     this.lastTime = cTime;
     this.fixPos();
     super.update(dt);
@@ -112,15 +113,14 @@ class Asteroid extends SpaceObject {
   draw() {
     this.update();
     
-    pushMatrix();
+    push();
     translate(this.loc[0], this.loc[1]);
     rotate(this.dir);
-    let angle = TWO_PI / this.getMass();
     let radius = Math.round(this.getMass()*3);
     beginShape();
-    for (let a = 0; a < TWO_PI; a += angle) vertex(Math.cos(a) * radius, Math.sin(a) * radius);
+    for (let a = 0; a < Math.PI*2; a += Math.PI*2 / this.getMass()) vertex(Math.cos(a) * radius, Math.sin(a) * radius);
     endShape(CLOSE);
-    popMatrix();
+    pop();
   }
   
   getRadius() {return millis()-this.birth > 1000 ? this.getMass()*3 : -1000;}
@@ -130,7 +130,7 @@ class Asteroid extends SpaceObject {
     if (this.getMass() < 3) return;
     momentum[0] += Math.cos(this.getDir()) * this.getVel() * this.getMass();
     momentum[1] += Math.sin(this.getDir()) * this.getVel() * this.getMass();
-    let ratio = (Math.random()*0.5+0.5)*mult-(mult/2);
+    let ratio = (Math.random()*0.5+0.5)*imp-(imp/2);
     let masses = [Math.floor(this.getMass()/2), Math.ceil(this.getMass()/2)];
     asteroids.add(new Asteroid(this.getLoc(), [(momentum[0] * ratio)/masses[0], (momentum[1] * ratio)/masses[0]], masses[0]));
     asteroids.add(new Asteroid(this.getLoc(), [(momentum[0] * (-ratio))/masses[1], (momentum[1] * (-ratio))/masses[1]], masses[1]));
@@ -147,7 +147,7 @@ class Bullet extends SpaceObject {
     let cTime = millis();
     let dt = this.lastTime > 0 ? (cTime-this.lastTime)/1000 : 0;
     this.lastTime = cTime;
-    super.fixPos();
+    this.fixPos();
     if (millis() >= this.deathTime) dqueue.add(this);
     super.update(dt);
   }
@@ -164,12 +164,6 @@ class Bullet extends SpaceObject {
   }
 }
 class Spaceship extends SpaceObject {
-  static spaceship;
-  static getSpaceship() {
-    if (!Spaceship.spaceship) Spaceship.spaceship = new Spaceship(height/2, width/2);
-    return Spaceship.spaceship;
-  }
-
   constructor(x,y) {
     super([x,y]);
     this.acceleration = 0;
@@ -192,17 +186,17 @@ class Spaceship extends SpaceObject {
     this.update();
     let ti = this.invincibility-millis();
     if (ti > 0 && ti/75 % 2 < 1) return;
-    pushMatrix();
-    translate(this.loc[0], this.loc[1]);
-    rotate(this.dir-HALF_PI);
-    line(-10, -5, 0, 20);
-    line(0, 20, 10, -5);
-    line(10, -5, 0, 0);
-    line(0, 0, -10, -5);
-    popMatrix();
+    push();
+    translate(this.getLoc()[0], this.getLoc()[1]);
+    rotate(Math.round(this.getDir()));
+    line(-5, -10, 20, 0);
+    line(20, 0, -5, 10);
+    line(-5, 10, 0, 0);
+    line(0, 0, -5, -10);
+    pop();
   }
   
-  getRadius() {return this.invincibility-millis()>0?0:4;}
+  getRadius() {return this.invincibility-millis()>0?-100:3;}
   
   collide(momentum) { // placeholder for death
     this.angVel = 69;
@@ -229,13 +223,13 @@ class Spaceship extends SpaceObject {
         break;
       case 's':
         this.acceleration-=dt*52;
-        super.angVel += super.angVel > 0 ? -dt : dt;
+        this.angVel += this.angVel > dt ? -dt : this.angVel < -dt ? dt : -this.angVel;
         break;
       case 'a':
-        super.angVel -= dt*2;
+        this.angVel -= dt*2;
         break;
       case 'd':
-        super.angVel += dt*2;
+        this.angVel += dt*2;
         break;
     }
   }
