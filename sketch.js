@@ -1,3 +1,6 @@
+const c = 8000; // lightspeed
+const imp = 7; // impulse
+
 const dqueue = new Set();
 const asteroids = new Set();
 const bullets = new Set();
@@ -44,7 +47,6 @@ function keyPressed() {
       break;
   }
 }
-const c = 8000; // lightspeed
 class SpaceObject {
   constructor(loc, dir=0, vel=0, mass=5) {
     this.loc = loc;
@@ -57,6 +59,7 @@ class SpaceObject {
   update(dt) {
     this.vel = Math.min(Math.max(0, this.vel), c);
     this.dir += this.angVel * dt;
+    this.dir %= Math.PI*2;
     let mul = this.vel * dt;
     this.loc[0] += Math.cos(this.dir) * mul;
     this.loc[1] += Math.sin(this.dir) * mul;
@@ -88,7 +91,6 @@ class SpaceObject {
   getMass() {return this.mass;}
   getRadius() {throw new Error("Radius method not implemented.")} // for collisions
 }
-const imp = 16; // impulse
 class Asteroid extends SpaceObject {
   constructor(loc = null, components = null, mass = null) {
     if (loc && components && mass) {
@@ -127,7 +129,7 @@ class Asteroid extends SpaceObject {
   
   collide(momentum) {
     dqueue.add(this);
-    if (this.getMass() < 3) return;
+    if (this.getMass() < 5) return;
     momentum[0] += Math.cos(this.getDir()) * this.getVel() * this.getMass();
     momentum[1] += Math.sin(this.getDir()) * this.getVel() * this.getMass();
     let ratio = (Math.random()*0.5+0.5)*imp-(imp/2);
@@ -188,7 +190,7 @@ class Spaceship extends SpaceObject {
     if (ti > 0 && ti/75 % 2 < 1) return;
     push();
     translate(this.getLoc()[0], this.getLoc()[1]);
-    rotate(Math.round(this.getDir()));
+    rotate(this.getDir());
     line(-5, -10, 20, 0);
     line(20, 0, -5, 10);
     line(-5, 10, 0, 0);
@@ -219,10 +221,10 @@ class Spaceship extends SpaceObject {
   onKey(c, dt) {
     switch (c) {
       case 'w':
-        this.acceleration+=dt*64;
+        this.acceleration+=dt*128;
         break;
       case 's':
-        this.acceleration-=dt*52;
+        this.acceleration-=dt*256;
         this.angVel += this.angVel > dt ? -dt : this.angVel < -dt ? dt : -this.angVel;
         break;
       case 'a':
