@@ -1,5 +1,6 @@
 const c = 8000; // lightspeed
 const imp = 7; // impulse
+const inelasticMomentum = 70**2;
 
 const dqueue = new Set();
 const asteroids = new Set();
@@ -80,11 +81,17 @@ class SpaceObject {
   getMomentum() {return [Math.cos(this.dir) * this.mass * this.vel, Math.sin(this.dir) * this.mass * this.vel]}
   checkCollision(a) {
     if (dist(this.loc[0], this.loc[1], a.loc[0], a.loc[1]) > this.getRadius() + a.getRadius()) return false;
-    this.collide(a);
-    a.collide(this);
+    if (this.getMass() >= a.getMass()) {
+      this.collide(a);
+      a.collideWith(this);
+    } else {
+      a.collide(this);
+      this.collideWith(a);
+    }
     return true;
   }
-  collide(other) {throw new Error("Collide method not implemented.")}
+  collide(other) {throw new Error("Collide method not implemented.")} // i have larger mass
+  collideWith(other) {this.collide(other);} // i have smaller mass
   
   getLoc() {return [...this.loc];}
   getVel() {return this.vel;}
@@ -132,10 +139,19 @@ class Asteroid extends SpaceObject {
     dqueue.add(this);
     if (this.getMass() < 6) return;
     let momentum = [other.getMomentum()[0]+this.getMomentum()[0], other.getMomentum()[1]+this.getMomentum()[1]];
-    let ratio = (Math.random()*0.5+0.5)*imp-(imp/2);
-    let masses = [Math.floor(this.getMass()/2), Math.ceil(this.getMass()/2)];
-    asteroids.add(new Asteroid(this.getLoc(), [(momentum[0] * ratio)/masses[0], (momentum[1] * ratio)/masses[0]], masses[0]));
-    asteroids.add(new Asteroid(this.getLoc(), [(momentum[0] * (-ratio))/masses[1], (momentum[1] * (-ratio))/masses[1]], masses[1]));
+    if (momentum[0]**2+momentum[1]**2 < inelasticMomentum) {
+      let mass = this.getMass()+other.getMass();
+      asteroids.add(new Asteroid(this.getLoc(), [momentum[0]/mass, momentum[1]/mass], mass));
+    } else {
+      let ratio = (Math.random()*0.3+0.7)*imp-(imp/2);
+      let masses = [Math.floor(this.getMass()/2), Math.ceil(this.getMass()/2)];
+      asteroids.add(new Asteroid(this.getLoc(), [(momentum[0] * ratio)/masses[0], (momentum[1] * ratio)/masses[0]], masses[0]));
+      asteroids.add(new Asteroid(this.getLoc(), [(momentum[0] * (-ratio))/masses[1], (momentum[1] * (-ratio))/masses[1]], masses[1]));
+    }
+  }
+
+  collideWith(_) {
+    dqueue.add(this);
   }
 }
 class Bullet extends SpaceObject {
